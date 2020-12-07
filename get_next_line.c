@@ -94,8 +94,9 @@ char	*ft_newstock(char *stock, int i)
 	j = 0;
 	if(!(newstock = (char *)malloc(ft_strlen(stock) - i + 1)))
 		return (NULL);
-	while (stock[j])
+	while ((stock +i)[j] && (j < i))
 	{
+		//printf("stock %c\n", (stock + i)[j]);
 		newstock[j] = (stock + i)[j];
 		j++;
 	}
@@ -124,7 +125,7 @@ int get_next_line(int fd, char **line)
 			{
 				*line = ft_fill_line(stock, i, *line);
 				//stock = ft_newstock(stock, i);
-				stock = ft_empty_stock(stock, i);
+				stock = ft_newstock(stock, i);
 				return (1);
 			}
 			i++;
@@ -145,6 +146,6 @@ int main()
 		free(line);
 		line = NULL;
 	}
-	while (1);
+//	while (1);
 	//return 0;
 }
