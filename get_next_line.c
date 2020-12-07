@@ -36,8 +36,8 @@ char *ft_strconcat(char *s1, char *s2, int size)
 	int i;
 	int j;
 
-	j = size;
 	i = ft_strlen(s1);
+	j = size;
 	if (!(concat = (char *)malloc(sizeof(char) * (i + size + 1))))
 		return NULL;
 	if (s1)
@@ -47,42 +47,10 @@ char *ft_strconcat(char *s1, char *s2, int size)
 		while (size--)
 			*concat++ = *s2++;
 	*(concat) = '\0';
-	free(s1); //on free le stock d'origine
+//	if (s1)
+	//	free(s1); //on free le stock d'origine
 	return (concat - i - j);
 }
-
-void	*ft_memcpy(void *dst, const void *src, size_t size)
-{
-	unsigned char *dst2;
-	unsigned char *src2;
-
-	if (!dst && !src)
-		return (0);
-	dst2 = (unsigned char *)dst;
-	src2 = (unsigned char *)src;
-	while (size-- > 0)
-		*dst2++ = *src2++;
-
-	//printf("add dst2 %p\n", &dst2);
-	//printf("add src2 %p\n", &src2);
-	return (dst);
-}
-
-// char *ft_empty_stock(char *stock, int i)
-// {
-// 	int j;
-// 	char *tmp;
-
-// 	j = 0;
-// 	tmp = malloc(sizeof(char *) * (i));
-// 	tmp = ft_memcpy(tmp, stock, i);
-// //	printf("add tmp %p\n", tmp);
-// //	printf("add stock %p\n", stock);
-// //	printf ("tmp= %s\n", tmp);
-// 	stock = stock + i + 1;
-// 	free(tmp);
-// 	return (stock);
-// }
 
 char	*ft_newstock(char *stock, int i)
 {
@@ -92,39 +60,38 @@ char	*ft_newstock(char *stock, int i)
 	j = 0;
 	if(!(newstock = (char *)malloc(ft_strlen(stock) - i + 1)))
 		return (NULL);
-	while (stock[j])
+	while ((stock + i)[j] != '\0')
 	{
 		newstock[j] = (stock + i)[j];
 		j++;
 	}
 	newstock[j] = '\0';
-	free(stock); //on free l'ancien stock
+//	free(stock); //on free l'ancien stock
 	return (newstock);
 }
 
 int get_next_line(int fd, char **line)
 {
 	int size;
-	char buf[1];
+	char buf[4];
 	static char *stock;
 	int i;
 
 	i = 0;
-	while ((((size = read(fd, buf, 1)) > 0)) || stock[i])
+	while ((((size = read(fd, buf, 4)) > 0)) || stock[i])
 	{
 		if (size > 0)
 			stock = ft_strconcat(stock, buf, size);
 		while (stock[i])
 		{
+			//	printf("%d\n", i);
 			if (stock[i] == '\n')
 			{
 				*line = ft_fill_line(stock, i, *line);
-				//stock = ft_newstock(stock, i);
-				stock = ft_empty_stock(stock, i);
+				stock = ft_newstock(stock, i + 1);
 				return (1);
 			}
 			i++;
-			free(line); //test
 		}
 	}
 	free(stock);
@@ -143,6 +110,6 @@ int main()
 		free(line);
 		line = NULL;
 	}
-	while (1);
-	//return 0;
+	//while (1);
+	return 0;
 }
