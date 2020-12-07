@@ -36,20 +36,18 @@ char *ft_strconcat(char *s1, char *s2, int size)
 	int i;
 	int j;
 
+	j = size;
 	i = ft_strlen(s1);
-	j = size; // nb de bytes lu renvoyes par read
-
-	if (!(concat = (char *)malloc(sizeof(char) * (i + j + 1))))
+	if (!(concat = (char *)malloc(sizeof(char) * (i + size + 1))))
 		return NULL;
 	if (s1)
 		while (*s1)
 			*concat++ = *s1++;
-//	printf ("concat 1re etape = %s\n", concat - i);
 	if (*s2)
 		while (size--)
 			*concat++ = *s2++;
 	*(concat) = '\0';
-	//printf ("concat = %s\n", concat - i - j);
+	free(s1); //on free le stock d'origine
 	return (concat - i - j);
 }
 
@@ -70,21 +68,21 @@ void	*ft_memcpy(void *dst, const void *src, size_t size)
 	return (dst);
 }
 
-char *ft_empty_stock(char *stock, int i)
-{
-	int j;
-	char *tmp;
+// char *ft_empty_stock(char *stock, int i)
+// {
+// 	int j;
+// 	char *tmp;
 
-	j = 0;
-	tmp = malloc(sizeof(char *) * (i));
-	tmp = ft_memcpy(tmp, stock, i);
-//	printf("add tmp %p\n", tmp);
-//	printf("add stock %p\n", stock);
-//	printf ("tmp= %s\n", tmp);
-	stock = stock + i + 1;
-	free(tmp);
-	return (stock);
-}
+// 	j = 0;
+// 	tmp = malloc(sizeof(char *) * (i));
+// 	tmp = ft_memcpy(tmp, stock, i);
+// //	printf("add tmp %p\n", tmp);
+// //	printf("add stock %p\n", stock);
+// //	printf ("tmp= %s\n", tmp);
+// 	stock = stock + i + 1;
+// 	free(tmp);
+// 	return (stock);
+// }
 
 char	*ft_newstock(char *stock, int i)
 {
@@ -100,9 +98,8 @@ char	*ft_newstock(char *stock, int i)
 		j++;
 	}
 	newstock[j] = '\0';
-	free(stock);
+	free(stock); //on free l'ancien stock
 	return (newstock);
-
 }
 
 int get_next_line(int fd, char **line)
@@ -113,7 +110,6 @@ int get_next_line(int fd, char **line)
 	int i;
 
 	i = 0;
-
 	while ((((size = read(fd, buf, 1)) > 0)) || stock[i])
 	{
 		if (size > 0)
@@ -128,8 +124,10 @@ int get_next_line(int fd, char **line)
 				return (1);
 			}
 			i++;
+			free(line); //test
 		}
 	}
+	free(stock);
 	return (0);
 }
 
