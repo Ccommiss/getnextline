@@ -52,21 +52,22 @@ char *ft_strconcat(char *s1, char *s2, int size)
 	return (concat - i - j);
 }
 
-char	*ft_newstock(char *stock, int i)
+char	*ft_newstock(char **stock, int i)
 {
 	char *newstock;
 	int j;
 
 	j = 0;
-	if(!(newstock = (char *)malloc(ft_strlen(stock) - i + 1)))
+	if(!(newstock = (char *)malloc(ft_strlen(*stock) - i + 1)))
 		return (NULL);
-	while ((stock + i)[j] != '\0')
+//	printf ("STOCK J %c ; ", (*stock + i)[0]);
+	while (((*stock + i)[j]) != '\0')
 	{
-		newstock[j] = (stock + i)[j];
+		newstock[j] = (*stock + i)[j];
 		j++;
 	}
 	newstock[j] = '\0';
-//	free(stock); //on free l'ancien stock
+	free(*stock); //on free l'ancien stock
 	return (newstock);
 }
 
@@ -88,7 +89,7 @@ int get_next_line(int fd, char **line)
 			if (stock[i] == '\n')
 			{
 				*line = ft_fill_line(stock, i, *line);
-				stock = ft_newstock(stock, i + 1);
+				stock = ft_newstock(&stock, i + 1);
 				return (1);
 			}
 			i++;
