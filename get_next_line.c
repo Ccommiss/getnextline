@@ -33,11 +33,13 @@ char *ft_fill_line(char *stock, int i, char *line)
 char *ft_strconcat(char *s1, char *s2, int size)
 {
 	char *concat;
+	char *tmp;
 	int i;
 	int j;
 
 	i = ft_strlen(s1);
 	j = size;
+	tmp = s1;
 	if (!(concat = (char *)malloc(sizeof(char) * (i + size + 1))))
 		return NULL;
 	if (s1)
@@ -47,8 +49,8 @@ char *ft_strconcat(char *s1, char *s2, int size)
 		while (size--)
 			*concat++ = *s2++;
 	*(concat) = '\0';
-//	if (s1)
-	//	free(s1); //on free le stock d'origine
+	if (tmp)
+		free(tmp); //on free le stock d'origine
 	return (concat - i - j);
 }
 
@@ -60,7 +62,6 @@ char	*ft_newstock(char **stock, int i)
 	j = 0;
 	if(!(newstock = (char *)malloc(ft_strlen(*stock) - i + 1)))
 		return (NULL);
-//	printf ("STOCK J %c ; ", (*stock + i)[0]);
 	while (((*stock + i)[j]) != '\0')
 	{
 		newstock[j] = (*stock + i)[j];
@@ -85,7 +86,6 @@ int get_next_line(int fd, char **line)
 			stock = ft_strconcat(stock, buf, size);
 		while (stock[i])
 		{
-			//	printf("%d\n", i);
 			if (stock[i] == '\n')
 			{
 				*line = ft_fill_line(stock, i, *line);
@@ -111,6 +111,5 @@ int main()
 		free(line);
 		line = NULL;
 	}
-	//while (1);
 	return 0;
 }
